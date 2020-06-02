@@ -6,7 +6,7 @@ let allWishes = localStorage.getItem('wishes')
   : [];
 let userName = localStorage.getItem('userName')
   ? JSON.parse(localStorage.getItem('userName'))
-  : [];
+  : '';
 
 function setList(list) {
   localStorage.setItem('wishes', JSON.stringify(list));
@@ -57,11 +57,7 @@ function createNewWish(text, id, link, price) {
 }
 
 function addWishPrice() {
-  if (
-    event.target.matches('p.wish-price input') &&
-    event.keyCode === 13 &&
-    event.target.value
-  ) {
+ 
     let li = event.target.closest('li');
 
     allWishes[li.getAttribute('list-id')-1].price = event.target.value;
@@ -72,15 +68,12 @@ function addWishPrice() {
       <img src="img/create-24px.svg" class="edit price">`;
     li.querySelector('p.wish-price').innerHTML = wishPrice;
     setList(allWishes);
-  }
+  
 }
 
 function addWishLink() {
   let value = event.target.value;
-  if (
-    event.target.matches('input.wish-link') &&
-    event.keyCode === 13 && value
-  ) {
+  
     let li = event.target.closest('li');
     
     value = value.includes('http://') || value.includes('https://') ? value : `https://${value}`;
@@ -92,11 +85,11 @@ function addWishLink() {
       <img src="img/create-24px.svg" class="edit link">`;
     li.querySelector('p.wish-link').innerHTML = wishLink;
     setList(allWishes);
-  }
+  
 }
 
 function editInput() {
-  if (event.target.matches('img.edit')) {
+  
     let id = event.target.closest('li').getAttribute('list-id')-1;
     let li = event.target.closest('li');
 
@@ -112,18 +105,19 @@ function editInput() {
       li.querySelector('p.wish-price').innerHTML = input;
     }
     setList(allWishes);
-  }
+  
 }
 
 function DeleteLi() {
-  if (event.target.matches('img.delete')) {
+  
     delete allWishes[event.target.closest('li').getAttribute('list-id')-1];
     event.target.closest('li').remove();
 
     allWishes = allWishes.filter(el => {
       return el;
     });
-  }
+    setList(allWishes);
+  
 }
 
 if (localStorage.getItem('userName')) {
@@ -155,15 +149,19 @@ newWish.addEventListener('keydown', function(event) {
     allWishes.push(wish);
 
     createNewWish(this.value, allWishes.length - 1);
+    console.log(this.value);
 
     newWish.value = '';
     setList(allWishes);
   }
 });
 
-wishArea.addEventListener('keydown', () => {
-  addWishLink();
-  addWishPrice();
+wishArea.addEventListener('keydown', event => {
+  if (event.keyCode === 13 && event.target.value) {
+    if (event.target.matches('input.wish-link')) addWishLink();
+    else if (event.target.matches('p.wish-price input')) addWishPrice();
+  }
+   
 });
 
 wishArea.addEventListener('click', event => {
@@ -175,7 +173,7 @@ wishArea.addEventListener('click', event => {
       li.className = '';
     }
   }
-  editInput();
-  DeleteLi();
+  if (event.target.matches('img.edit')) editInput();
+  if (event.target.matches('img.delete')) DeleteLi();
   setList(allWishes);
 });
