@@ -85,7 +85,6 @@ function addWishLink() {
       <img src="img/create-24px.svg" class="edit link">`;
     li.querySelector('p.wish-link').innerHTML = wishLink;
     setList(allWishes);
-  
 }
 
 function editInput() {
@@ -105,7 +104,6 @@ function editInput() {
       li.querySelector('p.wish-price').innerHTML = input;
     }
     setList(allWishes);
-  
 }
 
 function DeleteLi() {
